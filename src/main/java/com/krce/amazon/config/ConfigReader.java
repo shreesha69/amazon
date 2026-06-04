@@ -32,12 +32,16 @@ public class ConfigReader {
         }
     }
 
-    public static String get(String key) {
+    private static String get(String key) {
         return properties.getProperty(key);
     }
 
-    public static String get(String key, String defaultValue) {
-        return properties.getProperty(key, defaultValue);
+    private static String getEnvOrProperty(String envVar, String propKey, String defaultValue) {
+        String env = System.getenv(envVar);
+        if (env != null && !env.isEmpty()) {
+            return env;
+        }
+        return properties.getProperty(propKey, defaultValue);
     }
 
     public static String getBrowser() { return get("browser", "chrome"); }
@@ -56,23 +60,26 @@ public class ConfigReader {
     public static String getLogDir() { return resolvePath(get("log.dir", "logs")); }
     public static int getRetryCount() { return Integer.parseInt(get("retry.count", "2")); }
 
-    public static String getEmailTo() { return get("email.to"); }
-    public static String getEmailFrom() { return get("email.from"); }
-    public static String getEmailHost() { return get("email.host"); }
-    public static String getEmailPort() { return get("email.port"); }
-    public static String getEmailUsername() { return get("email.username"); }
-    public static String getEmailPassword() { return get("email.password"); }
-    public static String getEmailSubject() { return get("email.subject"); }
+    public static String getEmailTo() { return getEnvOrProperty("MAIL_TO", "email.to", ""); }
+    public static String getEmailFrom() { return getEnvOrProperty("MAIL_FROM", "email.from", ""); }
+    public static String getEmailHost() { return get("email.host", "smtp.gmail.com"); }
+    public static String getEmailPort() { return get("email.port", "587"); }
+    public static String getEmailUsername() { return getEnvOrProperty("MAIL_USERNAME", "email.username", ""); }
+    public static String getEmailPassword() { return getEnvOrProperty("MAIL_PASSWORD", "email.password", ""); }
+    public static String getEmailSubject() { return get("email.subject", "Amazon Automation Test Report"); }
     public static boolean isEmailConfigured() {
-        return get("email.to") != null && !get("email.to").isEmpty()
-                && get("email.from") != null && !get("email.from").isEmpty();
+        return !getEmailTo().isEmpty() && !getEmailFrom().isEmpty()
+                && !getEmailUsername().isEmpty() && !getEmailPassword().isEmpty();
+    }
+
+    private static String get(String key, String defaultValue) {
+        return properties.getProperty(key, defaultValue);
     }
 
     private static String resolvePath(String path) {
         if (path == null) return null;
         Path p = Paths.get(path);
         if (p.isAbsolute()) return p.toString();
-        String userDir = System.getProperty("user.dir");
-        return Paths.get(userDir, path).normalize().toString();
+        return Paths.get(System.getProperty("user.dir"), path).normalize().toString();
     }
 }

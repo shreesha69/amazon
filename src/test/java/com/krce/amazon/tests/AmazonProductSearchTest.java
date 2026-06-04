@@ -72,7 +72,10 @@ public class AmazonProductSearchTest extends BaseTest {
 
             String category = ConfigReader.getCategory();
             SearchResultsPage resultsPage = homePage.searchProduct(category, keyword);
-            ScreenshotUtil.captureScreenshot(driver, "SearchResults_" + keyword.replace(" ", "_"));
+
+            Thread.sleep(2000);
+
+            ScreenshotUtil.captureScreenshot(driver, "SearchResults_" + keyword.replaceAll("[^a-zA-Z0-9]", "_"));
             extentTest.log(Status.PASS, "Amazon launched and search performed for: " + keyword);
 
             List<Product> products = resultsPage.extractProductDetails();
@@ -85,8 +88,10 @@ public class AmazonProductSearchTest extends BaseTest {
             allProducts.addAll(products);
 
             extentTest.log(Status.PASS, "Test completed for keyword: " + keyword);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         } catch (Exception e) {
-            String screenshotPath = ScreenshotUtil.captureScreenshot(driver, "Failure_" + keyword.replace(" ", "_"));
+            String screenshotPath = ScreenshotUtil.captureScreenshot(driver, "Failure_" + keyword.replaceAll("[^a-zA-Z0-9]", "_"));
             extentTest.fail("Test failed for keyword: " + keyword + " - " + e.getMessage());
             extentTest.addScreenCaptureFromPath(screenshotPath);
             log.error("Test failed for keyword: {}", keyword, e);
@@ -96,7 +101,7 @@ public class AmazonProductSearchTest extends BaseTest {
 
     private void validateProduct(Product product, ExtentTest extentTest) {
         if (product.isNameDisplayed()) {
-            extentTest.log(Status.PASS, "Product Name displayed: " + product.getName());
+            extentTest.log(Status.PASS, "Product Name displayed: " + truncate(product.getName(), 80));
         } else {
             extentTest.log(Status.WARNING, "Product Name not displayed");
         }
@@ -126,6 +131,11 @@ public class AmazonProductSearchTest extends BaseTest {
         }
     }
 
+    private String truncate(String s, int max) {
+        if (s == null) return "";
+        return s.length() <= max ? s : s.substring(0, max) + "...";
+    }
+
     @AfterMethod
     public void tearDown() {
         if (!allProducts.isEmpty()) {
@@ -144,7 +154,11 @@ public class AmazonProductSearchTest extends BaseTest {
             ExtentReportManager.getTest().log(Status.INFO, "<pre>" + summary.toString() + "</pre>");
         }
 
-        ScreenshotUtil.captureScreenshot(driver, "AfterTest_");
+        try {
+            ScreenshotUtil.captureScreenshot(driver, "AfterTest_");
+        } catch (Exception e) {
+            log.warn("Failed to capture after-test screenshot: {}", e.getMessage());
+        }
         quitDriver();
     }
 }

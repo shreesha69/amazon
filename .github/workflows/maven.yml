@@ -36,14 +36,6 @@ jobs:
         with:
           chrome-version: stable
 
-      - name: Setup Firefox (optional)
-        if: ${{ github.event.inputs.browser == 'firefox' || github.event_name != 'workflow_dispatch' }}
-        uses: browser-actions/setup-firefox@v1
-
-      - name: Setup Edge (optional)
-        if: ${{ github.event.inputs.browser == 'edge' }}
-        uses: browser-actions/setup-edge@v1
-
       - name: Cache Maven dependencies
         uses: actions/cache@v4
         with:
@@ -95,11 +87,3 @@ jobs:
           name: logs
           path: logs/
           retention-days: 7
-
-      - name: Deploy Report to GitHub Pages
-        if: always() && github.ref == 'refs/heads/main'
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./output/reports
-          destination_dir: reports

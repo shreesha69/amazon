@@ -1,5 +1,6 @@
 package com.krce.amazon.pages;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,29 +11,37 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.krce.amazon.config.ConfigReader;
 import com.krce.amazon.models.Product;
 
 public class SearchResultsPage {
     private static final Logger log = LogManager.getLogger(SearchResultsPage.class);
     private WebDriver driver;
+    private WebDriverWait wait;
 
     @FindBy(css = "[data-component-type='s-search-result']")
     private List<WebElement> searchResults;
 
-    private static final String SELECTOR_NAME = "h2 a.a-link-normal span.a-text-normal";
-    private static final String SELECTOR_PRICE_WHOLE = ".a-price .a-price-whole";
-    private static final String SELECTOR_PRICE_FRACTION = ".a-price .a-price-fraction";
-    private static final String SELECTOR_RATING = "span.a-icon-alt";
-    private static final String SELECTOR_REVIEWS = "span.a-size-base.s-underline-text";
-    private static final String SELECTOR_PRIME = "i.a-icon-prime";
-
     public SearchResultsPage(WebDriver driver) {
         this.driver = driver;
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(ConfigReader.getExplicitWait()));
         PageFactory.initElements(driver, this);
     }
 
+    public void waitForResults() {
+        try {
+            wait.until(ExpectedConditions.presenceOfElementLocated(
+                    By.cssSelector("[data-component-type='s-search-result']")));
+        } catch (Exception e) {
+            log.warn("Search results did not load within timeout: {}", e.getMessage());
+        }
+    }
+
     public List<Product> extractProductDetails() {
+        waitForResults();
         List<Product> products = new ArrayList<>();
         log.info("Extracting product details from {} results", searchResults.size());
 
@@ -56,7 +65,7 @@ public class SearchResultsPage {
         Product product = new Product();
 
         try {
-            WebElement nameEl = result.findElement(By.cssSelector(SELECTOR_NAME));
+            WebElement nameEl = result.findElement(By.cssSelector("h2 a.a-link-normal span.a-text-normal, h2 a.a-link-normal"));
             product.setName(nameEl.getText().trim());
             product.setNameDisplayed(true);
         } catch (Exception e) {
@@ -65,13 +74,13 @@ public class SearchResultsPage {
         }
 
         try {
-            String whole = result.findElement(By.cssSelector(SELECTOR_PRICE_WHOLE)).getText().trim();
+            String whole = result.findElement(By.cssSelector(".a-price .a-price-whole")).getText().trim();
             String fraction = "";
             try {
-                fraction = result.findElement(By.cssSelector(SELECTOR_PRICE_FRACTION)).getText().trim();
+                fraction = result.findElement(By.cssSelector(".a-price .a-price-fraction")).getText().trim();
             } catch (Exception ignored) {
             }
-            String price = "₹" + whole + (fraction.isEmpty() ? "" : "." + fraction);
+            String price = "₹" + whole + (!fraction.isEmpty() ? "." + fraction : "");
             product.setPrice(price);
             product.setPriceAvailable(true);
         } catch (Exception e) {
@@ -80,8 +89,9 @@ public class SearchResultsPage {
         }
 
         try {
-            String ratingText = result.findElement(By.cssSelector(SELECTOR_RATING)).getAttribute("textContent");
-            if (ratingText != null) {
+            WebElement ratingEl = result.findElement(By.cssSelector("span.a-icon-alt"));
+            String ratingText = ratingEl.getAttribute("textContent");
+            if (ratingText != null && !ratingText.isEmpty()) {
                 String rating = ratingText.split(" ")[0];
                 product.setRating(rating);
                 product.setRatingAvailable(true);
@@ -92,7 +102,7 @@ public class SearchResultsPage {
         }
 
         try {
-            WebElement reviewsEl = result.findElement(By.cssSelector(SELECTOR_REVIEWS));
+            WebElement reviewsEl = result.findElement(By.cssSelector("span.a-size-base.s-underline-text, a.a-size-base.s-underline-text"));
             product.setReviews(reviewsEl.getText().trim());
             product.setReviewsAvailable(true);
         } catch (Exception e) {
@@ -101,7 +111,7 @@ public class SearchResultsPage {
         }
 
         try {
-            result.findElement(By.cssSelector(SELECTOR_PRIME));
+            result.findElement(By.cssSelector("i.a-icon-prime"));
             product.setPrimeAvailability("Yes");
             product.setPrimeInfoDisplayed(true);
         } catch (Exception e) {
@@ -113,6 +123,7 @@ public class SearchResultsPage {
     }
 
     public int getResultCount() {
+        waitForResults();
         return searchResults.size();
     }
 }

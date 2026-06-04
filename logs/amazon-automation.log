@@ -573,3 +573,42 @@ Command: [471e2582fc414b91726e27565124d815, screenshot {}]
 Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 148.0.7778.217, chrome: {chromedriverVersion: 148.0.7778.178 (d096af1c9e9..., userDataDir: C:\Users\shree\AppData\Loca...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:57409}, goog:processID: 41608, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: windows, proxy: Proxy(), se:cdp: ws://localhost:57409/devtoo..., se:cdpVersion: 148.0.7778.217, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
 Session ID: 471e2582fc414b91726e27565124d815
 2026-06-04 12:16:37.159 [main] INFO  com.krce.amazon.utilities.ExtentTestNGListener - Test suite finished: Amazon Product Search Tests
+2026-06-04 12:22:59.435 [main] INFO  com.krce.amazon.config.ConfigReader - Configuration loaded from classpath: /config.properties
+2026-06-04 12:22:59.837 [main] INFO  com.krce.amazon.utilities.ExtentReportManager - Extent Report initialized at: C:\Users\shree\IdeaProjects\Amazon\output\reports\AmazonTestReport_20260604_122259.html
+2026-06-04 12:22:59.839 [main] INFO  com.krce.amazon.base.BaseTest - Test suite initialized. Screenshots: C:\Users\shree\IdeaProjects\Amazon\output\screenshots, Output: C:\Users\shree\IdeaProjects\Amazon\output\data\AmazonProductData.xlsx
+2026-06-04 12:22:59.844 [main] INFO  com.krce.amazon.utilities.ExtentTestNGListener - Test suite started: Amazon Product Search Tests
+2026-06-04 12:23:00.967 [main] INFO  com.krce.amazon.utilities.ExcelReader - Read 4 search keywords from Excel: C:\Users\shree\IdeaProjects\Amazon\src\main\resources\testdata\input.xlsx
+2026-06-04 12:23:00.995 [main] INFO  com.krce.amazon.base.BaseTest - Initializing browser: chrome, headless: false
+2026-06-04 12:23:06.768 [main] INFO  com.krce.amazon.base.BaseTest - WebDriver initialized for browser: chrome
+2026-06-04 12:23:06.957 [main] INFO  com.krce.amazon.utilities.ExtentTestNGListener - Test started: testAmazonProductSearch
+2026-06-04 12:23:06.991 [main] INFO  com.krce.amazon.tests.AmazonProductSearchTest - Starting test for keyword: toys
+2026-06-04 12:23:18.939 [main] INFO  com.krce.amazon.pages.HomePage - Navigated to Amazon URL: https://www.amazon.in
+2026-06-04 12:23:20.164 [main] INFO  com.krce.amazon.pages.HomePage - Selected category: Toys & Games
+2026-06-04 12:23:21.280 [main] INFO  com.krce.amazon.pages.HomePage - Entered search keyword: toys
+2026-06-04 12:23:29.143 [main] INFO  com.krce.amazon.pages.HomePage - Clicked search button
+2026-06-04 12:23:29.778 [main] INFO  com.krce.amazon.utilities.ScreenshotUtil - Screenshot saved: C:\Users\shree\IdeaProjects\Amazon\output\screenshots\SearchResults_toys_20260604_122329.png
+2026-06-04 12:23:29.843 [main] INFO  com.krce.amazon.pages.SearchResultsPage - Extracting product details from 33 results
+2026-06-04 12:23:40.102 [main] WARN  com.krce.amazon.pages.SearchResultsPage - Product 1: Name not found
+2026-06-04 12:23:50.526 [main] WARN  com.krce.amazon.pages.SearchResultsPage - Product 1: Reviews not found
+2026-06-04 12:24:10.877 [main] WARN  com.krce.amazon.pages.SearchResultsPage - Product 2: Name not found
+2026-06-04 12:24:31.172 [main] WARN  com.krce.amazon.pages.SearchResultsPage - Product 2: Reviews not found
+2026-06-04 12:24:51.478 [main] WARN  com.krce.amazon.pages.SearchResultsPage - Product 3: Name not found
+2026-06-04 12:25:11.781 [main] WARN  com.krce.amazon.pages.SearchResultsPage - Product 3: Reviews not found
+2026-06-04 12:25:32.006 [main] WARN  com.krce.amazon.pages.SearchResultsPage - Product 4: Name not found
+2026-06-04 12:25:52.279 [main] WARN  com.krce.amazon.pages.SearchResultsPage - Product 4: Reviews not found
+2026-06-04 12:26:12.726 [main] WARN  com.krce.amazon.pages.SearchResultsPage - Product 5: Name not found
+2026-06-04 12:26:32.954 [main] WARN  com.krce.amazon.pages.SearchResultsPage - Product 5: Reviews not found
+2026-06-04 12:26:53.196 [main] WARN  com.krce.amazon.pages.SearchResultsPage - Product 6: Name not found
+2026-06-04 12:27:17.752 [main] WARN  com.krce.amazon.pages.SearchResultsPage - Product 6: Reviews not found
+2026-06-04 12:27:40.164 [main] WARN  com.krce.amazon.pages.SearchResultsPage - Product 7: Name not found
+2026-06-04 12:28:02.983 [main] WARN  com.krce.amazon.pages.SearchResultsPage - Product 7: Reviews not found
+2026-06-04 12:28:24.998 [main] WARN  com.krce.amazon.pages.SearchResultsPage - Product 8: Name not found
+2026-06-04 12:28:53.139 [main] WARN  com.krce.amazon.pages.SearchResultsPage - Product 8: Reviews not found
+2026-06-04 12:29:14.241 [main] WARN  com.krce.amazon.pages.SearchResultsPage - Product 9: Name not found
+2026-06-04 12:29:35.063 [main] WARN  com.krce.amazon.pages.SearchResultsPage - Product 9: Reviews not found
+2026-06-04 12:29:55.469 [main] WARN  com.krce.amazon.pages.SearchResultsPage - Product 10: Name not found
+2026-06-04 12:30:15.945 [main] WARN  com.krce.amazon.pages.SearchResultsPage - Product 10: Reviews not found
+2026-06-04 12:30:36.437 [main] WARN  com.krce.amazon.pages.SearchResultsPage - Product 11: Name not found
+2026-06-04 12:30:56.947 [main] WARN  com.krce.amazon.pages.SearchResultsPage - Product 11: Reviews not found
+2026-06-04 12:31:17.210 [main] WARN  com.krce.amazon.pages.SearchResultsPage - Product 12: Name not found
+2026-06-04 12:31:37.653 [main] WARN  com.krce.amazon.pages.SearchResultsPage - Product 12: Reviews not found

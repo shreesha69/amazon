@@ -72,8 +72,12 @@ public class ExtentReportManager {
 
     public static void flush() {
         if (extent != null) {
-            extent.flush();
-            log.info("Extent Report flushed");
+            try {
+                extent.flush();
+                log.info("Extent Report flushed to: {}", reportPath);
+            } catch (Exception e) {
+                log.error("Failed to flush Extent Report", e);
+            }
         }
     }
 }

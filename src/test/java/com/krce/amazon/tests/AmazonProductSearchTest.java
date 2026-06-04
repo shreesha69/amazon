@@ -28,6 +28,7 @@ import com.krce.amazon.utilities.ExcelWriter;
 import com.krce.amazon.utilities.ExtentReportManager;
 import com.krce.amazon.utilities.RetryAnalyzer;
 import com.krce.amazon.utilities.ScreenshotUtil;
+import com.krce.amazon.utilities.ScreenshotUtil.ScreenshotResult;
 
 public class AmazonProductSearchTest extends BaseTest {
     private static final Logger log = LogManager.getLogger(AmazonProductSearchTest.class);
@@ -75,7 +76,8 @@ public class AmazonProductSearchTest extends BaseTest {
 
             Thread.sleep(2000);
 
-            ScreenshotUtil.captureScreenshot(driver, "SearchResults_" + keyword.replaceAll("[^a-zA-Z0-9]", "_"));
+            ScreenshotResult sr = ScreenshotUtil.captureScreenshot(driver, "SearchResults_" + keyword.replaceAll("[^a-zA-Z0-9]", "_"));
+            extentTest.addScreenCaptureFromPath(sr.relativePath, "Search Results - " + keyword);
             extentTest.log(Status.PASS, "Amazon launched and search performed for: " + keyword);
 
             List<Product> products = resultsPage.extractProductDetails();
@@ -91,10 +93,15 @@ public class AmazonProductSearchTest extends BaseTest {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         } catch (Exception e) {
-            String screenshotPath = ScreenshotUtil.captureScreenshot(driver, "Failure_" + keyword.replaceAll("[^a-zA-Z0-9]", "_"));
-            extentTest.fail("Test failed for keyword: " + keyword + " - " + e.getMessage());
-            extentTest.addScreenCaptureFromPath(screenshotPath);
             log.error("Test failed for keyword: {}", keyword, e);
+            try {
+                ScreenshotResult sr = ScreenshotUtil.captureScreenshot(driver, "Failure_" + keyword.replaceAll("[^a-zA-Z0-9]", "_"));
+                extentTest.fail("Test failed for keyword: " + keyword + " - " + e.getMessage());
+                extentTest.addScreenCaptureFromPath(sr.relativePath, "Failure - " + keyword);
+            } catch (Exception inner) {
+                extentTest.fail("Test failed for keyword: " + keyword + " - " + e.getMessage()
+                        + " (screenshot also failed: " + inner.getMessage() + ")");
+            }
             Assert.fail("Test failed: " + e.getMessage());
         }
     }
@@ -139,23 +146,28 @@ public class AmazonProductSearchTest extends BaseTest {
     @AfterMethod
     public void tearDown() {
         if (!allProducts.isEmpty()) {
-            String excelOutput = ConfigReader.getOutputExcel();
-            String csvOutput = ConfigReader.getOutputCsv();
+            try {
+                String excelOutput = ConfigReader.getOutputExcel();
+                String csvOutput = ConfigReader.getOutputCsv();
 
-            new java.io.File(excelOutput).getParentFile().mkdirs();
-            new java.io.File(csvOutput).getParentFile().mkdirs();
+                new java.io.File(excelOutput).getParentFile().mkdirs();
+                new java.io.File(csvOutput).getParentFile().mkdirs();
 
-            ExcelWriter.writeProductsToExcel(allProducts, excelOutput);
-            CsvWriter.writeProductsToCsv(allProducts, csvOutput);
+                ExcelWriter.writeProductsToExcel(allProducts, excelOutput);
+                CsvWriter.writeProductsToCsv(allProducts, csvOutput);
 
-            ExtentReportManager.getTest().log(Status.INFO, "Data exported to: " + excelOutput + " and " + csvOutput);
+                ExtentReportManager.getTest().log(Status.INFO, "Data exported to: " + excelOutput + " and " + csvOutput);
 
-            AnalyticsSummary summary = AnalyticsUtil.generateSummary(allProducts);
-            ExtentReportManager.getTest().log(Status.INFO, "<pre>" + summary.toString() + "</pre>");
+                AnalyticsSummary summary = AnalyticsUtil.generateSummary(allProducts);
+                ExtentReportManager.getTest().log(Status.INFO, "<pre>" + summary.toString() + "</pre>");
+            } catch (Exception e) {
+                log.warn("Failed to export test data: {}", e.getMessage());
+            }
         }
 
         try {
-            ScreenshotUtil.captureScreenshot(driver, "AfterTest_");
+            ScreenshotResult sr = ScreenshotUtil.captureScreenshot(driver, "AfterTest_");
+            ExtentReportManager.getTest().addScreenCaptureFromPath(sr.relativePath, "After Test");
         } catch (Exception e) {
             log.warn("Failed to capture after-test screenshot: {}", e.getMessage());
         }

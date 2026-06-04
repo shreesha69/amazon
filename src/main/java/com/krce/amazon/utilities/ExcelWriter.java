@@ -2,6 +2,9 @@ package com.krce.amazon.utilities;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -15,6 +18,13 @@ public class ExcelWriter {
     private static final Logger log = LogManager.getLogger(ExcelWriter.class);
 
     public static void writeProductsToExcel(List<Product> products, String filePath) {
+        Path path = Paths.get(filePath);
+        try {
+            Files.createDirectories(path.getParent());
+        } catch (IOException e) {
+            log.error("Failed to create parent directories: {}", path.getParent(), e);
+        }
+
         try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("Amazon Products");
 
@@ -45,9 +55,10 @@ public class ExcelWriter {
                 row.createCell(4).setCellValue(p.getPrimeAvailability() != null ? p.getPrimeAvailability() : "");
             }
 
-            FileOutputStream fos = new FileOutputStream(filePath);
-            workbook.write(fos);
-            log.info("Excel report written to: {}", filePath);
+            try (FileOutputStream fos = new FileOutputStream(path.toFile())) {
+                workbook.write(fos);
+            }
+            log.info("Excel report written to: {}", path);
         } catch (IOException e) {
             log.error("Failed to write Excel file: {}", filePath, e);
         }

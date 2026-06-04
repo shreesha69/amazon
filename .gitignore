@@ -35,5 +35,9 @@ build/
 ### VS Code ###
 .vscode/
 
+### Generated Files ###
+logs/
+output/
+
 ### Mac OS ###
 .DS_Store

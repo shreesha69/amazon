@@ -91,7 +91,7 @@ public class AnalyticsUtil {
 
     private static double parsePriceDouble(String value) {
         try {
-            return Double.parseDouble(value.replaceAll("[₹,,\\s]", ""));
+            return Double.parseDouble(value.replaceAll("[₹,\\s]", ""));
         } catch (NumberFormatException e) {
             return Double.MAX_VALUE;
         }

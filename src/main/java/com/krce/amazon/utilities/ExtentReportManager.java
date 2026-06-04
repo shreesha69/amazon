@@ -1,6 +1,8 @@
 package com.krce.amazon.utilities;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -17,6 +19,7 @@ public class ExtentReportManager {
     private static final Logger log = LogManager.getLogger(ExtentReportManager.class);
     private static ExtentReports extent;
     private static ThreadLocal<ExtentTest> test = new ThreadLocal<>();
+    private static String reportPath;
 
     public static ExtentReports getInstance() {
         if (extent == null) {
@@ -25,12 +28,21 @@ public class ExtentReportManager {
         return extent;
     }
 
+    public static String getReportPath() {
+        if (reportPath == null) getInstance();
+        return reportPath;
+    }
+
     private static void createInstance() {
         String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String reportDir = ConfigReader.getReportDir();
-        File dir = new File(reportDir);
-        if (!dir.exists()) dir.mkdirs();
-        String reportPath = reportDir + "/AmazonTestReport_" + timestamp + ".html";
+        Path dir = Paths.get(reportDir);
+        try {
+            Files.createDirectories(dir);
+        } catch (Exception e) {
+            log.error("Failed to create report directory", e);
+        }
+        reportPath = dir.resolve("AmazonTestReport_" + timestamp + ".html").toString();
 
         ExtentSparkReporter sparkReporter = new ExtentSparkReporter(reportPath);
         sparkReporter.config().setDocumentTitle("Amazon Product Search Automation Report");

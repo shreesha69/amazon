@@ -13,11 +13,13 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class DataGenerator {
     private static final Logger log = LogManager.getLogger(DataGenerator.class);
 
+    private static final List<String> DEFAULT_KEYWORDS = List.of(
+            "toys", "toys under 500", "toys above 500", "toys for kids"
+    );
+
     public static void main(String[] args) {
-        generateSampleInputExcel("src/main/resources/testdata/input.xlsx",
-                List.of("Toys", "Books", "Electronics", "Mobiles"));
-        generateSampleInputCsv("src/main/resources/testdata/input.csv",
-                List.of("Toys", "Books", "Electronics", "Mobiles"));
+        generateSampleInputExcel("src/main/resources/testdata/input.xlsx", DEFAULT_KEYWORDS);
+        generateSampleInputCsv("src/main/resources/testdata/input.csv", DEFAULT_KEYWORDS);
     }
 
     public static void generateSampleInputExcel(String filePath, List<String> keywords) {
@@ -39,15 +41,20 @@ public class DataGenerator {
 
             for (int i = 0; i < keywords.size(); i++) {
                 Row row = sheet.createRow(i + 1);
-                row.createCell(0).setCellValue(keywords.get(i));
+                Cell cell = row.createCell(0);
+                cell.setCellValue(keywords.get(i));
+                CellStyle cellStyle = workbook.createCellStyle();
+                cellStyle.setDataFormat(workbook.createDataFormat().getFormat("@"));
+                cell.setCellStyle(cellStyle);
             }
             sheet.autoSizeColumn(0);
 
-            FileOutputStream fos = new FileOutputStream(filePath);
-            workbook.write(fos);
+            try (FileOutputStream fos = new FileOutputStream(filePath)) {
+                workbook.write(fos);
+            }
             log.info("Sample input Excel generated: {}", filePath);
         } catch (IOException e) {
-            log.error("Failed to generate input Excel", e);
+            log.error("Failed to generate input Excel: {}", filePath, e);
         }
     }
 
@@ -59,7 +66,7 @@ public class DataGenerator {
             }
             log.info("Sample input CSV generated: {}", filePath);
         } catch (IOException e) {
-            log.error("Failed to generate input CSV", e);
+            log.error("Failed to generate input CSV: {}", filePath, e);
         }
     }
 }

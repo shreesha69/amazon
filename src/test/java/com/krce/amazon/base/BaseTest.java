@@ -1,6 +1,8 @@
 package com.krce.amazon.base;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Duration;
 
 import org.apache.logging.log4j.LogManager;
@@ -16,6 +18,7 @@ import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 
 import com.krce.amazon.config.ConfigReader;
+import com.krce.amazon.utilities.EmailUtil;
 import com.krce.amazon.utilities.ExtentReportManager;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -23,11 +26,26 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 public class BaseTest {
     private static final Logger log = LogManager.getLogger(BaseTest.class);
     private static ThreadLocal<WebDriver> driver = new ThreadLocal<>();
+    private static String suiteScreenshotDir;
+    private static String suiteOutputExcel;
+    private static String suiteOutputCsv;
 
     @BeforeSuite
     public void setUpSuite() {
         ExtentReportManager.getInstance();
-        log.info("Extent Report initialized for test suite");
+        suiteScreenshotDir = ConfigReader.getScreenshotDir();
+        suiteOutputExcel = ConfigReader.getOutputExcel();
+        suiteOutputCsv = ConfigReader.getOutputCsv();
+
+        try {
+            Files.createDirectories(Paths.get(suiteScreenshotDir));
+            Files.createDirectories(Paths.get(suiteOutputExcel).getParent());
+        } catch (Exception e) {
+            log.warn("Failed to create output directories", e);
+        }
+
+        log.info("Test suite initialized. Screenshots: {}, Output: {}",
+                suiteScreenshotDir, suiteOutputExcel);
     }
 
     public WebDriver getDriver() {
@@ -82,7 +100,11 @@ public class BaseTest {
 
     public void quitDriver() {
         if (driver.get() != null) {
-            driver.get().quit();
+            try {
+                driver.get().quit();
+            } catch (Exception e) {
+                log.warn("Error quitting driver: {}", e.getMessage());
+            }
             driver.remove();
             log.info("WebDriver quit successfully");
         }
@@ -91,6 +113,25 @@ public class BaseTest {
     @AfterSuite
     public void tearDownSuite() {
         ExtentReportManager.flush();
+        log.info("Extent Report finalized");
+
+        if (ConfigReader.isEmailConfigured()) {
+            try {
+                String reportPath = ExtentReportManager.getReportPath();
+                String[] attachments = new String[]{
+                        reportPath,
+                        suiteOutputExcel,
+                        suiteOutputCsv,
+                        suiteScreenshotDir
+                };
+                EmailUtil.sendEmailWithAttachments(attachments);
+            } catch (Exception e) {
+                log.error("Failed to send email report", e);
+            }
+        } else {
+            log.info("Email not configured - skipping email report");
+        }
+
         log.info("Test suite teardown complete");
     }
 }

@@ -1434,3 +1434,134 @@ Caused by: sun.security.provider.certpath.SunCertPathBuilderException: unable to
 	at com.sun.mail.smtp.SMTPTransport.startTLS(SMTPTransport.java:2150) ~[javax.mail-1.6.2.jar:1.6.2]
 	... 29 more
 2026-06-04 12:54:12.391 [main] INFO  com.krce.amazon.base.BaseTest - Suite finished
+2026-06-04 13:00:53.808 [main] INFO  com.krce.amazon.config.ConfigReader - Configuration loaded from classpath: /config.properties
+2026-06-04 13:00:54.899 [main] INFO  com.krce.amazon.utilities.ExtentReportManager - Extent Report initialized at: C:\Users\shree\IdeaProjects\Amazon\output\reports\AmazonTestReport_20260604_130053.html
+2026-06-04 13:00:54.911 [main] INFO  com.krce.amazon.base.BaseTest - Suite initialized
+2026-06-04 13:00:57.826 [main] INFO  com.krce.amazon.utilities.ExcelReader - Read 4 search keywords from Excel: C:\Users\shree\IdeaProjects\Amazon\src\main\resources\testdata\input.xlsx
+2026-06-04 13:00:57.962 [main] INFO  com.krce.amazon.base.BaseTest - Starting browser: chrome, headless: false
+2026-06-04 13:01:05.335 [main] INFO  com.krce.amazon.tests.AmazonProductSearchTest - === Keyword: toys ===
+2026-06-04 13:01:21.902 [main] INFO  com.krce.amazon.pages.HomePage - Navigated to Amazon URL: https://www.amazon.in
+2026-06-04 13:01:26.820 [main] INFO  com.krce.amazon.pages.HomePage - Entered keyword: toys
+2026-06-04 13:01:43.412 [main] INFO  com.krce.amazon.pages.HomePage - Clicked search button
+2026-06-04 13:01:48.145 [main] INFO  com.krce.amazon.utilities.ScreenshotUtil - Screenshot: C:\Users\shree\IdeaProjects\Amazon\output\screenshots\toys_20260604_130146.png
+2026-06-04 13:03:13.879 [main] INFO  com.krce.amazon.pages.SearchResultsPage - Extracted 0 products
+2026-06-04 13:03:15.433 [main] INFO  com.krce.amazon.tests.AmazonProductSearchTest - === Keyword: toys under 500 ===
+2026-06-04 13:03:29.760 [main] INFO  com.krce.amazon.pages.HomePage - Navigated to Amazon URL: https://www.amazon.in
+2026-06-04 13:03:34.056 [main] INFO  com.krce.amazon.pages.HomePage - Entered keyword: toys under 500
+2026-06-04 13:03:37.554 [main] INFO  com.krce.amazon.pages.HomePage - Clicked search button
+2026-06-04 13:03:53.695 [main] INFO  com.krce.amazon.utilities.ScreenshotUtil - Screenshot: C:\Users\shree\IdeaProjects\Amazon\output\screenshots\toys_under_500_20260604_130352.png
+2026-06-04 13:04:39.609 [main] INFO  com.krce.amazon.pages.SearchResultsPage - Extracted 0 products
+2026-06-04 13:04:39.824 [main] INFO  com.krce.amazon.tests.AmazonProductSearchTest - === Keyword: toys above 500 ===
+2026-06-04 13:04:51.649 [main] INFO  com.krce.amazon.pages.HomePage - Navigated to Amazon URL: https://www.amazon.in
+2026-06-04 13:04:52.832 [main] INFO  com.krce.amazon.pages.HomePage - Entered keyword: toys above 500
+2026-06-04 13:05:00.927 [main] INFO  com.krce.amazon.pages.HomePage - Clicked search button
+2026-06-04 13:05:06.344 [main] INFO  com.krce.amazon.utilities.ScreenshotUtil - Screenshot: C:\Users\shree\IdeaProjects\Amazon\output\screenshots\toys_above_500_20260604_130504.png
+2026-06-04 13:06:18.863 [main] INFO  com.krce.amazon.pages.SearchResultsPage - Extracted 0 products
+2026-06-04 13:06:19.067 [main] INFO  com.krce.amazon.tests.AmazonProductSearchTest - === Keyword: toys for kids ===
+2026-06-04 13:06:29.753 [main] INFO  com.krce.amazon.pages.HomePage - Navigated to Amazon URL: https://www.amazon.in
+2026-06-04 13:06:31.278 [main] INFO  com.krce.amazon.pages.HomePage - Entered keyword: toys for kids
+2026-06-04 13:06:38.410 [main] INFO  com.krce.amazon.pages.HomePage - Clicked search button
+2026-06-04 13:06:48.685 [main] INFO  com.krce.amazon.utilities.ScreenshotUtil - Screenshot: C:\Users\shree\IdeaProjects\Amazon\output\screenshots\toys_for_kids_20260604_130646.png
+2026-06-04 13:07:49.888 [main] INFO  com.krce.amazon.pages.SearchResultsPage - Extracted 0 products
+2026-06-04 13:07:59.514 [main] INFO  com.krce.amazon.utilities.ExtentReportManager - Extent Report flushed to: C:\Users\shree\IdeaProjects\Amazon\output\reports\AmazonTestReport_20260604_130053.html
+2026-06-04 13:08:03.688 [main] ERROR com.krce.amazon.utilities.EmailUtil - Failed to send email
+javax.mail.MessagingException: Could not convert socket to TLS
+	at com.sun.mail.smtp.SMTPTransport.startTLS(SMTPTransport.java:2155) ~[javax.mail-1.6.2.jar:1.6.2]
+	at com.sun.mail.smtp.SMTPTransport.protocolConnect(SMTPTransport.java:752) ~[javax.mail-1.6.2.jar:1.6.2]
+	at javax.mail.Service.connect(Service.java:388) ~[javax.mail-1.6.2.jar:1.6.2]
+	at javax.mail.Service.connect(Service.java:246) ~[javax.mail-1.6.2.jar:1.6.2]
+	at javax.mail.Service.connect(Service.java:195) ~[javax.mail-1.6.2.jar:1.6.2]
+	at javax.mail.Transport.send0(Transport.java:254) ~[javax.mail-1.6.2.jar:1.6.2]
+	at javax.mail.Transport.send(Transport.java:124) ~[javax.mail-1.6.2.jar:1.6.2]
+	at com.krce.amazon.utilities.EmailUtil.sendEmailWithAttachments(EmailUtil.java:69) [classes/:?]
+	at com.krce.amazon.base.BaseTest.tearDownSuite(BaseTest.java:95) [test-classes/:?]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[?:?]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[?:?]
+	at org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:141) [testng-7.10.2.jar:7.10.2]
+	at org.testng.internal.invokers.MethodInvocationHelper.invokeMethodConsideringTimeout(MethodInvocationHelper.java:71) [testng-7.10.2.jar:7.10.2]
+	at org.testng.internal.invokers.ConfigInvoker.invokeConfigurationMethod(ConfigInvoker.java:400) [testng-7.10.2.jar:7.10.2]
+	at org.testng.internal.invokers.ConfigInvoker.invokeConfigurations(ConfigInvoker.java:333) [testng-7.10.2.jar:7.10.2]
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:386) [testng-7.10.2.jar:7.10.2]
+	at org.testng.SuiteRunner.run(SuiteRunner.java:312) [testng-7.10.2.jar:7.10.2]
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52) [testng-7.10.2.jar:7.10.2]
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:95) [testng-7.10.2.jar:7.10.2]
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1274) [testng-7.10.2.jar:7.10.2]
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1208) [testng-7.10.2.jar:7.10.2]
+	at org.testng.TestNG.runSuites(TestNG.java:1112) [testng-7.10.2.jar:7.10.2]
+	at org.testng.TestNG.run(TestNG.java:1079) [testng-7.10.2.jar:7.10.2]
+	at org.apache.maven.surefire.testng.TestNGExecutor.run(TestNGExecutor.java:308) [surefire-testng-3.5.2.jar:3.5.2]
+	at org.apache.maven.surefire.testng.TestNGXmlTestSuite.execute(TestNGXmlTestSuite.java:71) [surefire-testng-3.5.2.jar:3.5.2]
+	at org.apache.maven.surefire.testng.TestNGProvider.invoke(TestNGProvider.java:113) [surefire-testng-3.5.2.jar:3.5.2]
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385) [surefire-booter-3.5.2.jar:3.5.2]
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162) [surefire-booter-3.5.2.jar:3.5.2]
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507) [surefire-booter-3.5.2.jar:3.5.2]
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495) [surefire-booter-3.5.2.jar:3.5.2]
+Caused by: javax.net.ssl.SSLHandshakeException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+	at java.base/sun.security.ssl.Alert.createSSLException(Alert.java:130) ~[?:?]
+	at java.base/sun.security.ssl.TransportContext.fatal(TransportContext.java:383) ~[?:?]
+	at java.base/sun.security.ssl.TransportContext.fatal(TransportContext.java:326) ~[?:?]
+	at java.base/sun.security.ssl.TransportContext.fatal(TransportContext.java:321) ~[?:?]
+	at java.base/sun.security.ssl.CertificateMessage$T13CertificateConsumer.checkServerCerts(CertificateMessage.java:1287) ~[?:?]
+	at java.base/sun.security.ssl.CertificateMessage$T13CertificateConsumer.onConsumeCertificate(CertificateMessage.java:1164) ~[?:?]
+	at java.base/sun.security.ssl.CertificateMessage$T13CertificateConsumer.consume(CertificateMessage.java:1107) ~[?:?]
+	at java.base/sun.security.ssl.SSLHandshake.consume(SSLHandshake.java:393) ~[?:?]
+	at java.base/sun.security.ssl.HandshakeContext.dispatch(HandshakeContext.java:477) ~[?:?]
+	at java.base/sun.security.ssl.HandshakeContext.dispatch(HandshakeContext.java:448) ~[?:?]
+	at java.base/sun.security.ssl.TransportContext.dispatch(TransportContext.java:206) ~[?:?]
+	at java.base/sun.security.ssl.SSLTransport.decode(SSLTransport.java:172) ~[?:?]
+	at java.base/sun.security.ssl.SSLSocketImpl.decode(SSLSocketImpl.java:1506) ~[?:?]
+	at java.base/sun.security.ssl.SSLSocketImpl.readHandshakeRecord(SSLSocketImpl.java:1421) ~[?:?]
+	at java.base/sun.security.ssl.SSLSocketImpl.startHandshake(SSLSocketImpl.java:455) ~[?:?]
+	at java.base/sun.security.ssl.SSLSocketImpl.startHandshake(SSLSocketImpl.java:426) ~[?:?]
+	at com.sun.mail.util.SocketFetcher.configureSSLSocket(SocketFetcher.java:626) ~[javax.mail-1.6.2.jar:1.6.2]
+	at com.sun.mail.util.SocketFetcher.startTLS(SocketFetcher.java:553) ~[javax.mail-1.6.2.jar:1.6.2]
+	at com.sun.mail.smtp.SMTPTransport.startTLS(SMTPTransport.java:2150) ~[javax.mail-1.6.2.jar:1.6.2]
+	... 29 more
+Caused by: sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+	at java.base/sun.security.validator.PKIXValidator.doBuild(PKIXValidator.java:388) ~[?:?]
+	at java.base/sun.security.validator.PKIXValidator.engineValidate(PKIXValidator.java:271) ~[?:?]
+	at java.base/sun.security.validator.Validator.validate(Validator.java:256) ~[?:?]
+	at java.base/sun.security.ssl.X509TrustManagerImpl.checkTrusted(X509TrustManagerImpl.java:230) ~[?:?]
+	at java.base/sun.security.ssl.X509TrustManagerImpl.checkServerTrusted(X509TrustManagerImpl.java:132) ~[?:?]
+	at java.base/sun.security.ssl.CertificateMessage$T13CertificateConsumer.checkServerCerts(CertificateMessage.java:1271) ~[?:?]
+	at java.base/sun.security.ssl.CertificateMessage$T13CertificateConsumer.onConsumeCertificate(CertificateMessage.java:1164) ~[?:?]
+	at java.base/sun.security.ssl.CertificateMessage$T13CertificateConsumer.consume(CertificateMessage.java:1107) ~[?:?]
+	at java.base/sun.security.ssl.SSLHandshake.consume(SSLHandshake.java:393) ~[?:?]
+	at java.base/sun.security.ssl.HandshakeContext.dispatch(HandshakeContext.java:477) ~[?:?]
+	at java.base/sun.security.ssl.HandshakeContext.dispatch(HandshakeContext.java:448) ~[?:?]
+	at java.base/sun.security.ssl.TransportContext.dispatch(TransportContext.java:206) ~[?:?]
+	at java.base/sun.security.ssl.SSLTransport.decode(SSLTransport.java:172) ~[?:?]
+	at java.base/sun.security.ssl.SSLSocketImpl.decode(SSLSocketImpl.java:1506) ~[?:?]
+	at java.base/sun.security.ssl.SSLSocketImpl.readHandshakeRecord(SSLSocketImpl.java:1421) ~[?:?]
+	at java.base/sun.security.ssl.SSLSocketImpl.startHandshake(SSLSocketImpl.java:455) ~[?:?]
+	at java.base/sun.security.ssl.SSLSocketImpl.startHandshake(SSLSocketImpl.java:426) ~[?:?]
+	at com.sun.mail.util.SocketFetcher.configureSSLSocket(SocketFetcher.java:626) ~[javax.mail-1.6.2.jar:1.6.2]
+	at com.sun.mail.util.SocketFetcher.startTLS(SocketFetcher.java:553) ~[javax.mail-1.6.2.jar:1.6.2]
+	at com.sun.mail.smtp.SMTPTransport.startTLS(SMTPTransport.java:2150) ~[javax.mail-1.6.2.jar:1.6.2]
+	... 29 more
+Caused by: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+	at java.base/sun.security.provider.certpath.SunCertPathBuilder.build(SunCertPathBuilder.java:148) ~[?:?]
+	at java.base/sun.security.provider.certpath.SunCertPathBuilder.engineBuild(SunCertPathBuilder.java:129) ~[?:?]
+	at java.base/java.security.cert.CertPathBuilder.build(CertPathBuilder.java:297) ~[?:?]
+	at java.base/sun.security.validator.PKIXValidator.doBuild(PKIXValidator.java:383) ~[?:?]
+	at java.base/sun.security.validator.PKIXValidator.engineValidate(PKIXValidator.java:271) ~[?:?]
+	at java.base/sun.security.validator.Validator.validate(Validator.java:256) ~[?:?]
+	at java.base/sun.security.ssl.X509TrustManagerImpl.checkTrusted(X509TrustManagerImpl.java:230) ~[?:?]
+	at java.base/sun.security.ssl.X509TrustManagerImpl.checkServerTrusted(X509TrustManagerImpl.java:132) ~[?:?]
+	at java.base/sun.security.ssl.CertificateMessage$T13CertificateConsumer.checkServerCerts(CertificateMessage.java:1271) ~[?:?]
+	at java.base/sun.security.ssl.CertificateMessage$T13CertificateConsumer.onConsumeCertificate(CertificateMessage.java:1164) ~[?:?]
+	at java.base/sun.security.ssl.CertificateMessage$T13CertificateConsumer.consume(CertificateMessage.java:1107) ~[?:?]
+	at java.base/sun.security.ssl.SSLHandshake.consume(SSLHandshake.java:393) ~[?:?]
+	at java.base/sun.security.ssl.HandshakeContext.dispatch(HandshakeContext.java:477) ~[?:?]
+	at java.base/sun.security.ssl.HandshakeContext.dispatch(HandshakeContext.java:448) ~[?:?]
+	at java.base/sun.security.ssl.TransportContext.dispatch(TransportContext.java:206) ~[?:?]
+	at java.base/sun.security.ssl.SSLTransport.decode(SSLTransport.java:172) ~[?:?]
+	at java.base/sun.security.ssl.SSLSocketImpl.decode(SSLSocketImpl.java:1506) ~[?:?]
+	at java.base/sun.security.ssl.SSLSocketImpl.readHandshakeRecord(SSLSocketImpl.java:1421) ~[?:?]
+	at java.base/sun.security.ssl.SSLSocketImpl.startHandshake(SSLSocketImpl.java:455) ~[?:?]
+	at java.base/sun.security.ssl.SSLSocketImpl.startHandshake(SSLSocketImpl.java:426) ~[?:?]
+	at com.sun.mail.util.SocketFetcher.configureSSLSocket(SocketFetcher.java:626) ~[javax.mail-1.6.2.jar:1.6.2]
+	at com.sun.mail.util.SocketFetcher.startTLS(SocketFetcher.java:553) ~[javax.mail-1.6.2.jar:1.6.2]
+	at com.sun.mail.smtp.SMTPTransport.startTLS(SMTPTransport.java:2150) ~[javax.mail-1.6.2.jar:1.6.2]
+	... 29 more
+2026-06-04 13:08:03.762 [main] INFO  com.krce.amazon.base.BaseTest - Suite finished

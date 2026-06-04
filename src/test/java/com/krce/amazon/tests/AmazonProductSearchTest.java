@@ -29,7 +29,7 @@ import com.krce.amazon.utilities.ScreenshotUtil.ScreenshotResult;
 
 public class AmazonProductSearchTest extends BaseTest {
     private static final Logger log = LogManager.getLogger(AmazonProductSearchTest.class);
-    private List<Product> allProducts;
+    private static List<Product> allProducts = new ArrayList<>();
 
     @DataProvider(name = "keywords")
     public Object[][] getKeywords() {
@@ -38,13 +38,8 @@ public class AmazonProductSearchTest extends BaseTest {
         String csv = ConfigReader.getInputCsv();
         if (new java.io.File(xl).exists()) list = ExcelReader.readSearchKeywords(xl);
         else if (new java.io.File(csv).exists()) list = CsvReader.readSearchKeywords(csv);
-        if (list.isEmpty()) list.add(ConfigReader.getCategory());
+        if (list.isEmpty()) list.add("toys");
         return list.stream().map(k -> new Object[]{k}).toArray(Object[][]::new);
-    }
-
-    @BeforeMethod
-    public void setUp() {
-        allProducts = new ArrayList<>();
     }
 
     @Test(dataProvider = "keywords")
@@ -54,7 +49,7 @@ public class AmazonProductSearchTest extends BaseTest {
         log.info("=== Keyword: {} ===", keyword);
 
         try {
-            new HomePage(driver).searchProduct(ConfigReader.getCategory(), keyword);
+            new HomePage(driver).searchProduct(keyword);
 
             SearchResultsPage results = new SearchResultsPage(driver);
             results.waitForResults();
@@ -79,8 +74,10 @@ public class AmazonProductSearchTest extends BaseTest {
             }
             allProducts.addAll(products);
             et.log(Status.PASS, "Completed");
+
+            exportData();
         } catch (Exception e) {
-            log.error("Failed for keyword '{}': {}", keyword, e.getMessage());
+            log.error("Failed for '{}': {}", keyword, e.getMessage());
             try {
                 ScreenshotResult sr = ScreenshotUtil.captureScreenshot(driver, "FAIL_" + keyword.replaceAll("[^a-zA-Z0-9]", "_"));
                 et.addScreenCaptureFromPath(sr.relativePath, "Failure");
@@ -89,21 +86,19 @@ public class AmazonProductSearchTest extends BaseTest {
         }
     }
 
-    @AfterMethod
-    public void tearDown() {
-        if (!allProducts.isEmpty()) {
-            try {
-                String xlOut = ConfigReader.getOutputExcel();
-                String csvOut = ConfigReader.getOutputCsv();
-                new java.io.File(xlOut).getParentFile().mkdirs();
-                new java.io.File(csvOut).getParentFile().mkdirs();
-                ExcelWriter.writeProductsToExcel(allProducts, xlOut);
-                CsvWriter.writeProductsToCsv(allProducts, csvOut);
-                ExtentReportManager.getTest().log(Status.INFO, "Data exported");
-                AnalyticsUtil.generateSummary(allProducts);
-            } catch (Exception e) {
-                log.warn("Export failed: {}", e.getMessage());
-            }
+    private void exportData() {
+        if (allProducts.isEmpty()) return;
+        try {
+            String xlOut = ConfigReader.getOutputExcel();
+            String csvOut = ConfigReader.getOutputCsv();
+            new java.io.File(xlOut).getParentFile().mkdirs();
+            new java.io.File(csvOut).getParentFile().mkdirs();
+            ExcelWriter.writeProductsToExcel(allProducts, xlOut);
+            CsvWriter.writeProductsToCsv(allProducts, csvOut);
+            ExtentReportManager.getTest().log(Status.INFO, "Data exported to " + xlOut);
+            AnalyticsUtil.generateSummary(allProducts);
+        } catch (Exception e) {
+            log.warn("Export failed: {}", e.getMessage());
         }
     }
 

@@ -20,45 +20,23 @@ public class ScreenshotUtil {
     private static final Logger log = LogManager.getLogger(ScreenshotUtil.class);
 
     public static class ScreenshotResult {
-        public final String absolutePath;
         public final String relativePath;
-
-        public ScreenshotResult(String absolutePath, String relativePath) {
-            this.absolutePath = absolutePath;
-            this.relativePath = relativePath;
-        }
+        public ScreenshotResult(String relativePath) { this.relativePath = relativePath; }
     }
 
     public static ScreenshotResult captureScreenshot(WebDriver driver, String screenshotName) {
-        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String screenshotDir = ConfigReader.getScreenshotDir();
-        Path dir = Paths.get(screenshotDir);
+        String ts = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String dir = ConfigReader.getScreenshotDir();
+        Path abs = Paths.get(dir, screenshotName + "_" + ts + ".png");
         try {
-            Files.createDirectories(dir);
-        } catch (IOException e) {
-            log.error("Failed to create screenshot directory: {}", screenshotDir, e);
-        }
-        String fileName = screenshotName + "_" + timestamp + ".png";
-        Path absolutePath = dir.resolve(fileName);
-        try {
+            Files.createDirectories(abs.getParent());
             java.io.File src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-            Files.copy(src.toPath(), absolutePath, StandardCopyOption.REPLACE_EXISTING);
-            log.info("Screenshot saved: {}", absolutePath);
+            Files.copy(src.toPath(), abs, StandardCopyOption.REPLACE_EXISTING);
+            log.info("Screenshot: {}", abs);
         } catch (IOException e) {
-            log.error("Failed to capture screenshot: {}", absolutePath, e);
+            log.error("Screenshot failed", e);
         }
-
-        String relativeFromReport = computeRelativePath(absolutePath.toString());
-        return new ScreenshotResult(absolutePath.toString(), relativeFromReport);
-    }
-
-    private static String computeRelativePath(String screenshotAbsolutePath) {
-        try {
-            Path reportDir = Paths.get(ConfigReader.getReportDir()).toAbsolutePath().normalize();
-            Path screenshotPath = Paths.get(screenshotAbsolutePath).toAbsolutePath().normalize();
-            return reportDir.relativize(screenshotPath).toString().replace("\\", "/");
-        } catch (Exception e) {
-            return screenshotAbsolutePath;
-        }
+        String relative = Paths.get(ConfigReader.getReportDir()).relativize(abs).toString().replace("\\", "/");
+        return new ScreenshotResult(relative);
     }
 }

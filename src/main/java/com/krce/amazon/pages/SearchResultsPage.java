@@ -36,94 +36,60 @@ public class SearchResultsPage {
             wait.until(ExpectedConditions.presenceOfElementLocated(
                     By.cssSelector("[data-component-type='s-search-result']")));
         } catch (Exception e) {
-            log.warn("Search results did not load within timeout: {}", e.getMessage());
+            log.warn("Results not loaded: {}", e.getMessage());
         }
     }
 
     public List<Product> extractProductDetails() {
         waitForResults();
         List<Product> products = new ArrayList<>();
-        log.info("Extracting product details from {} results", searchResults.size());
-
         for (int i = 0; i < searchResults.size(); i++) {
             try {
-                WebElement result = searchResults.get(i);
-                Product product = extractSingleProduct(result, i + 1);
-                if (product.getName() != null) {
-                    products.add(product);
-                }
+                Product p = extractSingleProduct(searchResults.get(i));
+                if (p.getName() != null) products.add(p);
             } catch (Exception e) {
-                log.warn("Failed to extract product at index {}: {}", i + 1, e.getMessage());
+                log.warn("Failed to extract product {}: {}", i + 1, e.getMessage());
             }
         }
-
-        log.info("Successfully extracted {} products", products.size());
+        log.info("Extracted {} products", products.size());
         return products;
     }
 
-    private Product extractSingleProduct(WebElement result, int index) {
-        Product product = new Product();
+    private Product extractSingleProduct(WebElement el) {
+        Product p = new Product();
+        try {
+            WebElement n = el.findElement(By.cssSelector("h2 a"));
+            p.setName(n.getText().trim());
+            p.setNameDisplayed(true);
+        } catch (Exception e) { p.setNameDisplayed(false); }
 
         try {
-            WebElement nameEl = result.findElement(By.cssSelector("h2 a.a-link-normal span.a-text-normal, h2 a.a-link-normal"));
-            product.setName(nameEl.getText().trim());
-            product.setNameDisplayed(true);
-        } catch (Exception e) {
-            product.setNameDisplayed(false);
-            log.warn("Product {}: Name not found", index);
-        }
+            String w = el.findElement(By.cssSelector(".a-price-whole")).getText().trim();
+            String f = "";
+            try { f = el.findElement(By.cssSelector(".a-price-fraction")).getText().trim(); } catch (Exception ignored) {}
+            p.setPrice("\u20B9" + w + (f.isEmpty() ? "" : "." + f));
+            p.setPriceAvailable(true);
+        } catch (Exception e) { p.setPriceAvailable(false); }
 
         try {
-            String whole = result.findElement(By.cssSelector(".a-price .a-price-whole")).getText().trim();
-            String fraction = "";
-            try {
-                fraction = result.findElement(By.cssSelector(".a-price .a-price-fraction")).getText().trim();
-            } catch (Exception ignored) {
-            }
-            String price = "₹" + whole + (!fraction.isEmpty() ? "." + fraction : "");
-            product.setPrice(price);
-            product.setPriceAvailable(true);
-        } catch (Exception e) {
-            product.setPriceAvailable(false);
-            log.warn("Product {}: Price not found", index);
-        }
+            String t = el.findElement(By.cssSelector("span.a-icon-alt")).getAttribute("textContent");
+            if (t != null && !t.isEmpty()) { p.setRating(t.split(" ")[0]); p.setRatingAvailable(true); }
+        } catch (Exception e) { p.setRatingAvailable(false); }
 
         try {
-            WebElement ratingEl = result.findElement(By.cssSelector("span.a-icon-alt"));
-            String ratingText = ratingEl.getAttribute("textContent");
-            if (ratingText != null && !ratingText.isEmpty()) {
-                String rating = ratingText.split(" ")[0];
-                product.setRating(rating);
-                product.setRatingAvailable(true);
-            }
-        } catch (Exception e) {
-            product.setRatingAvailable(false);
-            log.warn("Product {}: Rating not found", index);
-        }
+            WebElement r = el.findElement(By.cssSelector("span.a-size-base.s-underline-text"));
+            p.setReviews(r.getText().trim());
+            p.setReviewsAvailable(true);
+        } catch (Exception e) { p.setReviewsAvailable(false); }
 
         try {
-            WebElement reviewsEl = result.findElement(By.cssSelector("span.a-size-base.s-underline-text, a.a-size-base.s-underline-text"));
-            product.setReviews(reviewsEl.getText().trim());
-            product.setReviewsAvailable(true);
+            el.findElement(By.cssSelector("i.a-icon-prime"));
+            p.setPrimeAvailability("Yes");
+            p.setPrimeInfoDisplayed(true);
         } catch (Exception e) {
-            product.setReviewsAvailable(false);
-            log.warn("Product {}: Reviews not found", index);
+            p.setPrimeAvailability("No");
+            p.setPrimeInfoDisplayed(false);
         }
-
-        try {
-            result.findElement(By.cssSelector("i.a-icon-prime"));
-            product.setPrimeAvailability("Yes");
-            product.setPrimeInfoDisplayed(true);
-        } catch (Exception e) {
-            product.setPrimeAvailability("No");
-            product.setPrimeInfoDisplayed(false);
-        }
-
-        return product;
-    }
-
-    public int getResultCount() {
-        waitForResults();
-        return searchResults.size();
+        return p;
     }
 }
